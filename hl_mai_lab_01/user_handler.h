@@ -43,8 +43,8 @@ using Poco::Util::OptionCallback;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-#include "../../database/user.h"
-#include "../../helper.h"
+#include "user.h"
+#include "helper.h"
 
 static bool hasSubstr(const std::string &str, const std::string &substr)
 {
@@ -193,6 +193,20 @@ public:
                 root->set("instance", "/auth");
                 std::ostream &ostr = response.send();
                 Poco::JSON::Stringifier::stringify(root, ostr);
+                return;
+            }
+            else if (hasSubstr(request.getURI(), "/all"))
+            {
+                auto results = database::User::read_all();
+                Poco::JSON::Array arr;
+                for (auto s : results)
+                    arr.add(remove_password(s.toJSON()));
+                response.setStatus(Poco::Net::HTTPResponse::HTTP_OK);
+                response.setChunkedTransferEncoding(true);
+                response.setContentType("application/json");
+                std::ostream &ostr = response.send();
+                Poco::JSON::Stringifier::stringify(arr, ostr);
+
                 return;
             }
             else if (hasSubstr(request.getURI(), "/search"))

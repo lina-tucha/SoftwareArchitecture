@@ -1,11 +1,12 @@
 #include "user.h"
 #include "database.h"
-#include "../config/config.h"
+#include "config.h"
 
 #include <Poco/Data/SessionFactory.h>
 #include <Poco/Data/RecordSet.h>
 #include <Poco/JSON/Parser.h>
 #include <Poco/Dynamic/Var.h>
+#include <Poco/Logger.h>
 
 #include <sstream>
 #include <exception>

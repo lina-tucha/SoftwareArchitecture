@@ -38,7 +38,7 @@ using Poco::Util::OptionSet;
 using Poco::Util::OptionCallback;
 using Poco::Util::HelpFormatter;
 
-#include "handlers/user_handler.h"
+#include "user_handler.h"
 
 
 class HTTPRequestFactory: public HTTPRequestHandlerFactory

@@ -1,5 +1,5 @@
 #include "database.h"
-#include "../config/config.h"
+#include "config.h"
 
 namespace database{
     Database::Database(){

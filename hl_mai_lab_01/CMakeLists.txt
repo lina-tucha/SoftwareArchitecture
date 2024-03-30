@@ -1,33 +1,28 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.0)
+project(social_network)
 
-SET (EXAMPLE_BINARY "hl_mai_lab_01")
+set(CMAKE_CXX_STANDARD 17)
 
-find_package(OpenSSL)
-find_package(Threads)
+include_directories(/usr/local/include)
+
 find_package(Poco REQUIRED COMPONENTS Foundation Util Net XML JSON Crypto NetSSL Data JWT)
+find_package(PostgreSQL REQUIRED)
 
-if(NOT ${Poco_FOUND})
-    message(FATAL_ERROR "Poco C++ Libraries not found.")
-endif()
+include_directories(${Poco_INCLUDE_DIRS} ${PostgreSQL_INCLUDE_DIRS})
 
-include_directories(${Poco_INCLUDE_DIRS})
+link_directories(/usr/local/lib ${Poco_LIBRARY_DIRS} ${PostgreSQL_LIBRARY_DIRS})
 
+add_executable(social_network main.cpp config.cpp database.cpp user.cpp)
 
-SET(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-add_executable(${EXAMPLE_BINARY} main.cpp 
-                                 config/config.cpp 
-                                 database/database.cpp
-                                 database/user.cpp)
-
-
-target_include_directories(${EXAMPLE_BINARY} PRIVATE "${CMAKE_BINARY_DIR}")
-target_compile_options(${EXAMPLE_BINARY} PRIVATE -Wall -Wextra -pedantic -Werror )
-set_target_properties(${EXAMPLE_BINARY} PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(${EXAMPLE_BINARY} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
-
-target_link_libraries(${EXAMPLE_BINARY} PRIVATE 
-                             ${CMAKE_THREAD_LIBS_INIT} 
-                             ${Poco_LIBRARIES}
-                             "PocoDataPostgreSQL")
+target_link_libraries(social_network
+    ${Poco_LIBRARIES}
+    ${PostgreSQL_LIBRARIES}
+    PocoFoundation
+    PocoData
+    PocoDataPostgreSQL
+    PocoNet
+    PocoJSON
+    PocoUtil
+    PocoCrypto
+    PocoJWT
+)
