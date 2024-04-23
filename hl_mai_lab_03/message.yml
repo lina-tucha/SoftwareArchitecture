@@ -1,0 +1,208 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'Arch Lab Example API'
+  description: Архитектура программных систем
+servers:
+  - url: http://localhost:8081
+    description: Example server
+paths:
+  /messages:
+    get:
+      summary: Чтение информации об отправленных сообщениях пользователя
+      responses:
+        '200':
+          description: Сообщения для пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messages'
+        404:
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /message:
+    get:
+      summary: Чтение информации о сообщении
+      parameters:
+      - name: id
+        description: Уникальный идентификатор сообщения
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Найденный пользователь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+        404:
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Обновление информации о сообщении
+      parameters:
+      - name: id
+        description: Идентификатор сообщения
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: sender_id
+        description: Идентификатор отправителя
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: recipient_id
+        description: Идентификатор получателя
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: text
+        description: Содержание сообщения
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: date
+        description: Дата отправки
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Идентификатор, добавленного пользователя
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          description: Ошибка добавления пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Добавление нового сообщения
+      parameters:
+      - name: id
+        description: Идентификатор сообщения
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: sender_id
+        description: Идентификатор отправителя
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: recipient_id
+        description: Идентификатор получателя
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: text
+        description: Содержание сообщения
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: date
+        description: Дата отправки
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Идентификатор, добавленного пользователя
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          description: Ошибка добавления пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    id:
+      description: Уникальный идентификатор
+      type: integer
+    messages:
+      type: array
+      items:
+        $ref: '#/components/schemas/message'
+    message:
+      type: object
+      properties:
+        id:
+          type: integer
+        sender_id:
+          type: integer
+        recipient_id:
+          type: integer
+        text:
+          type: string
+        date:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: Сообщение о ошибке
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
