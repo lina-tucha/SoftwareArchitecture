@@ -1,0 +1,192 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'Arch Lab Example API'
+  description: Архитектура программных систем
+servers:
+  - url: http://localhost:8081
+    description: Example server
+paths:
+  /posts:
+    get:
+      summary: Чтение информации о постах пользователя
+      responses:
+        '200':
+          description: Посты пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/posts'
+        404:
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /post:
+    get:
+      summary: Чтение информации о посте
+      parameters:
+      - name: id
+        description: Уникальный идентификатор поста
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: Найденный пользователь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/post'
+        404:
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Обновление информации о посте
+      parameters:
+      - name: id
+        description: Идентификатор поста
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: user_id
+        description: Идентификатор пользователя
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: text
+        description: Содержание поста
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: date
+        description: Дата поста
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Идентификатор, добавленного пользователя
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          description: Ошибка добавления пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Добавление нового сообщения
+      parameters:
+      - name: id
+        description: Идентификатор поста
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: user_id
+        description: Идентификатор поста
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 1
+      - name: text
+        description: Содержание поста
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: date
+        description: Дата поста
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Идентификатор, добавленного пользователя
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          description: Ошибка добавления пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    id:
+      description: Уникальный идентификатор
+      type: integer
+    posts:
+      type: array
+      items:
+        $ref: '#/components/schemas/post'
+    post:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        text:
+          type: string
+        date:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: Сообщение о ошибке
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
